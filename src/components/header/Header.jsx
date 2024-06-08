@@ -54,23 +54,21 @@ const Header = () => {
     <header className=" py-3 shadow bg-[#020617] text-zinc-50 sticky top-0 h-20 w-full z-40">
       <Container>
         <nav className="flex justify-between mx-2 items-center">
-          <div className="mr-4 hover:scale-105 duration-200 ease-in-out">
-            <Link to="/">
-              <img
-                src={logo}
-                className="lg:w-24 w-14"
-                alt="KayhanTech Blog Logo"
-              />
-              <h1 className="text-center text-[10px] lg:text-xs text-zinc-50 lg:font-bold">
-                Blog
-              </h1>
-            </Link>
-          </div>
-          {authStatus && username && (
-            <div className="pl-20">
-              Welcome to the KayhanTech Blog, {username.toUpperCase()}
+          <div className="flex items-center justify-between gap-4">
+            <div className="mr-4 hover:scale-105 duration-200 ease-in-out">
+              <Link to="/">
+                <img src={logo} className="w-24" alt="KayhanTech Blog Logo" />
+                <h1 className="text-center text-[10px] lg:text-xs text-zinc-50 lg:font-bold">
+                  Blog
+                </h1>
+              </Link>
             </div>
-          )}
+            {authStatus && username && (
+              <div className=" flex items-start justify-start">
+                <Link to="/"> Welcome, {username.toUpperCase()}</Link>
+              </div>
+            )}
+          </div>
 
           <ul className="hidden lg:flex ml-auto">
             {navItems.map((item) =>

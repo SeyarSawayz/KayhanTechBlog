@@ -1,7 +1,6 @@
 import React from "react";
 import { GiHamburgerMenu } from "react-icons/gi";
 import { useState } from "react";
-import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import LogoutBtn from "./LogoutBtn";
@@ -46,9 +45,13 @@ const MobileNav = () => {
         className="lg:hidden block z-40"
         onClick={() => setShowNav((prev) => !prev)}
       >
-        {showNav ? <IoClose className="text-3xl" /> : <GiHamburgerMenu />}
+        {showNav ? (
+          <IoClose className="text-4xl" />
+        ) : (
+          <GiHamburgerMenu className="text-3xl" />
+        )}
         {showNav && (
-          <div className="p-6 absolute top-12 right-0 mx-4  my-2 min-w-[140px] rounded bg-[#020617] border border-slate-500 shadow-lg sidebar ">
+          <div className="p-6 absolute top-20 right-0 mx-4  my-2 min-w-[140px] rounded bg-[#020617] border border-slate-500 shadow-lg sidebar ">
             <ul className="flex flex-col gap-5 items-center">
               {navItems.map((item) =>
                 item.active ? (
