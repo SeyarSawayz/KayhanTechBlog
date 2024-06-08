@@ -12,7 +12,7 @@ const PostCard = ({ $id, title, featuredImage }) => {
             src={fileService.getFilePreview(featuredImage)}
             alt={title}
           />
-          <h2 className="text-slate-400 text-xl pl-3 mt-3">{title}</h2>
+          <h2 className="text-slate-400 text-xl px-3 mt-3">{title}</h2>
         </div>
       </div>
     </Link>

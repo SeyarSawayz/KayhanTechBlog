@@ -37,7 +37,7 @@ export default function Post() {
   return post ? (
     <div className=" py-8">
       <Container>
-        <div className="w-full flex items-center shadow-2xl shadow-slate-300 border-2 border-[#020617] bg-[#1E293B] justify-between mb-4  rounded-xl overflow-hidden">
+        <div className="w-full flex lg:flex-row flex-col items-center shadow-2xl shadow-slate-300 border-2 border-[#020617] bg-[#1E293B] justify-between mb-4  rounded-xl overflow-hidden">
           <div className="w-full h-screen overflow-hidden">
             <img
               src={fileService.getFilePreview(post.featuredImage)}
@@ -46,7 +46,7 @@ export default function Post() {
             />
           </div>
 
-          <div className="flex flex-col items-center justify-between h-screen  w-full">
+          <div className="flex  flex-wrap items-center justify-between h-screen  w-full">
             {isAuthor && (
               <div className="flex items-center justify-end p-3 h-14  w-full">
                 <Link to={`/edit-post/${post.$id}`}>
@@ -67,11 +67,11 @@ export default function Post() {
                 </Button>
               </div>
             )}
-            <div className="w-full  h-screen p-4">
+            <div className="w-full  h-screen p-4 overflow-y-scroll">
               <div className="w-full mb-6">
                 <h1 className="text-2xl font-bold">{post.title}</h1>
               </div>
-              <div className="browser-css">{parse(post.content)}</div>
+              <div className="browser-css pb-20">{parse(post.content)}</div>
             </div>
           </div>
         </div>

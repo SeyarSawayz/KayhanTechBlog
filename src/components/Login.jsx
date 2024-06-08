@@ -2,18 +2,19 @@ import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { Link, useNavigate } from "react-router-dom";
 import { login as sliceLogin } from "../store/authSlice";
-import { Button, Input, logo } from "../components/index";
+import { Button, Input, logo, SocialLogin } from "../components/index";
 import { useDispatch } from "react-redux";
 import authService from "../appwrite/auth";
 import { FaFacebook } from "react-icons/fa";
 import { FaGoogle } from "react-icons/fa";
 import { IoMdEye, IoMdEyeOff } from "react-icons/io";
+import { ImSpinner2 } from "react-icons/im";
 
 const Login = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [error, setError] = useState("");
-  const [loader, setLoader] = useState(true);
+  const [loader, setLoader] = useState(false);
 
   const [showPass, setShowPass] = useState(false);
 
@@ -21,10 +22,12 @@ const Login = () => {
 
   const handleLogin = async (data) => {
     setError("");
+    setLoader(true);
     try {
       const session = await authService.login(data);
       if (session) {
         const userData = await authService.getCurrentUser();
+        console.log(userData);
         if (userData) {
           dispatch(sliceLogin(userData));
           navigate("/");
@@ -32,6 +35,8 @@ const Login = () => {
       }
     } catch (error) {
       setError(error.message);
+    } finally {
+      setLoader(false);
     }
   };
 
@@ -58,7 +63,6 @@ const Login = () => {
             Sign Up
           </Link>
         </p>
-        {error && <h1 className="text-red text-3xl">{error}</h1>}
         <form onSubmit={handleSubmit(handleLogin)} className="mt-8">
           <div className="space-y-5">
             <Input
@@ -94,28 +98,18 @@ const Login = () => {
                   {showPass ? <IoMdEye /> : <IoMdEyeOff />}
                 </div>
               </div>
+              {error && <h1 className="text-red-400 text-sm">{error}</h1>}
             </div>
 
             <Button className="w-full" type="submit">
-              Login
+              {loader ? (
+                <ImSpinner2 className="mx-auto animate-spin" />
+              ) : (
+                "Login"
+              )}
             </Button>
           </div>
-          <div className="mt-16 w-full">
-            <h1>Sign in with your social network</h1>
-            <div className="w-full flex items-center justify-center flex-col mt-3">
-              <div className="w-full border border-slate-700 flex items-center justify-center gap-3 cursor-pointer py-3 rounded-md font-bold hover:bg-red-400">
-                <FaGoogle />
-                <h1>Continue with Google</h1>
-              </div>
-            </div>
-
-            <div className="w-full flex items-center justify-center flex-col mt-3">
-              <div className="w-full border border-slate-700 flex items-center justify-center gap-3 cursor-pointer py-3 rounded-md font-bold hover:bg-blue-600">
-                <FaFacebook />
-                <h1>Continue with Facebook</h1>
-              </div>
-            </div>
-          </div>
+          <SocialLogin />
         </form>
       </div>
     </div>

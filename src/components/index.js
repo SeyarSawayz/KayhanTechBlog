@@ -12,8 +12,9 @@ import PostCard from "./PostCard.jsx";
 import PostForm from "./post-form/PostForm.jsx";
 import AuthLayout from "./AuthLayout.jsx";
 import logo from "/logo.png";
-import pc from "/pc.svg";
 import mobile from "/mobile.svg";
+import blank from "/blank.svg";
+import SocialLogin from "./SocialLogin.jsx";
 export {
   Header,
   Footer,
@@ -29,6 +30,7 @@ export {
   PostForm,
   AuthLayout,
   logo,
-  pc,
   mobile,
+  SocialLogin,
+  blank,
 };

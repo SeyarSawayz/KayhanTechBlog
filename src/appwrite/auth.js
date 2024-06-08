@@ -67,6 +67,14 @@ export class AuthService {
       throw error;
     }
   }
+
+  googleAuth(success, failed) {
+    try {
+      this.account.createOAuth2Session("google", success, failed);
+    } catch (error) {
+      console.log("Google auth error in auth.js folder of appwrite", error);
+    }
+  }
 }
 
 const authService = new AuthService();

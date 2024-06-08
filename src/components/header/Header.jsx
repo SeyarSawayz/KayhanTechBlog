@@ -4,11 +4,24 @@ import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { logo } from "../index";
 import MobileNav from "./MobileNav";
+import authService from "../../appwrite/auth";
+import { useEffect, useState } from "react";
 
 const Header = () => {
   const authStatus = useSelector((state) => state.auth.status);
+  const [username, SetUsername] = useState("");
 
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const fetchUsername = async () => {
+      const data = await authService.getCurrentUser();
+      if (data) {
+        SetUsername(data.name);
+      }
+    };
+    fetchUsername();
+  }, [authStatus]);
 
   const navItems = [
     {
@@ -53,6 +66,11 @@ const Header = () => {
               </h1>
             </Link>
           </div>
+          {authStatus && username && (
+            <div className="pl-20">
+              Welcome to the KayhanTech Blog, {username.toUpperCase()}
+            </div>
+          )}
 
           <ul className="hidden lg:flex ml-auto">
             {navItems.map((item) =>

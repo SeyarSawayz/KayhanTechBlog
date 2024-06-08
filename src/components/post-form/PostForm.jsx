@@ -1,12 +1,17 @@
-import React, { useCallback, useEffect } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { Button, Input, RTE, Select } from "../index";
 import service from "../../appwrite/config";
 import fileService from "../../appwrite/fileServices";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
+import { ImSpinner2 } from "react-icons/im";
+
 const PostForm = ({ post }) => {
   const navigate = useNavigate();
+  const [loader, setLoader] = useState(false);
+  const [error, setError] = useState("");
+
   const { register, handleSubmit, watch, control, getValues, setValue } =
     useForm({
       defaultValues: {
@@ -20,37 +25,47 @@ const PostForm = ({ post }) => {
   const userData = useSelector((state) => state.auth.userData);
 
   const submit = async (data) => {
-    if (post) {
-      const file = data.image[0]
-        ? fileService.imageUpload(date.image[0])
-        : null;
-      if (file) {
-        fileService.deleteImage(post.featuredImage);
-      }
+    setError("");
+    setLoader(true);
+    try {
+      if (post) {
+        const file = data.image[0]
+          ? await fileService.imageUpload(data.image[0])
+          : null;
 
-      const dbPost = await service.updatePost(post.$id, {
-        ...data,
-        featuredImage: file ? file.$id : undefined,
-      });
-      if (dbPost) {
-        navigate(`/post/${dbPost.$id}`);
-      }
-    } else {
-      const fileData = await data.image[0];
-      if (fileData) {
+        if (file) {
+          fileService.deleteImage(post.featuredImage);
+        }
+
+        const dbPost = await service.updatePost(post.$id, {
+          ...data,
+          featuredImage: file ? file.$id : undefined,
+        });
+
+        if (dbPost) {
+          navigate(`/post/${dbPost.$id}`);
+        }
+      } else {
         const file = await fileService.imageUpload(data.image[0]);
+
         if (file) {
           const fileId = file.$id;
           data.featuredImage = fileId;
-          const newPost = await service.createPost({
+          const dbPost = await service.createPost({
             ...data,
             userId: userData.$id,
           });
-          if (newPost) {
-            navigate(`/post/${newPost.$id}`);
+
+          if (dbPost) {
+            navigate(`/post/${dbPost.$id}`);
           }
         }
       }
+    } catch (error) {
+      console.log("Error on PostForm on submit function", error);
+      setError(error.message);
+    } finally {
+      setLoader(false);
     }
   };
 
@@ -77,7 +92,7 @@ const PostForm = ({ post }) => {
 
   return (
     <form onSubmit={handleSubmit(submit)} className="flex flex-wrap">
-      <div className="lg:w-2/3 w-full px-2">
+      <div className="lg:w-2/3 w-full px-2 overflow-scroll">
         <Input
           label="Title :"
           placeholder="Title"
@@ -130,8 +145,15 @@ const PostForm = ({ post }) => {
           bgColor={post ? "bg-green-500" : undefined}
           className="w-full"
         >
-          {post ? "Update" : "Submit"}
+          {loader ? (
+            <ImSpinner2 className="animate-spin mx-auto" />
+          ) : post ? (
+            "Update"
+          ) : (
+            "Submit"
+          )}
         </Button>
+        {error && <p className="text-red-400">{error}</p>}
       </div>
     </form>
   );

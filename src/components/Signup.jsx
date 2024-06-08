@@ -1,24 +1,26 @@
 import React, { useState } from "react";
-import { Button, Input, logo } from "../components/index";
+import { Button, Input, logo, SocialLogin } from "../components/index";
 import { login as authSlice } from "../store/authSlice";
 import authService from "../appwrite/auth";
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { useForm } from "react-hook-form";
-import { FaFacebook } from "react-icons/fa";
-import { FaGoogle } from "react-icons/fa";
+
 import { IoMdEye, IoMdEyeOff } from "react-icons/io";
+import { ImSpinner2 } from "react-icons/im";
 
 const Signup = () => {
   const [error, setError] = useState("");
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [showPass, setShowPass] = useState(false);
+  const [loader, setLoader] = useState(false);
 
   const { handleSubmit, register } = useForm();
 
   const signUp = async (data) => {
     setError("");
+    setLoader(true);
     try {
       const createdUser = await authService.createAccount(data);
       if (createdUser) {
@@ -30,6 +32,8 @@ const Signup = () => {
       }
     } catch (error) {
       setError(error.message);
+    } finally {
+      setLoader(false);
     }
   };
   return (
@@ -55,7 +59,6 @@ const Signup = () => {
             Sign In
           </Link>
         </p>
-        {error && <p className="text-red">{error}</p>}
 
         <form onSubmit={handleSubmit(signUp)}>
           <div className="space-y-5">
@@ -100,27 +103,17 @@ const Signup = () => {
                 </div>
               </div>
             </div>
+            {error && <p className="text-red-400 text-sm">{error}</p>}
 
             <Button className="w-full" type="submit">
-              Create Account
+              {loader ? (
+                <ImSpinner2 className="animate-spin mx-auto" />
+              ) : (
+                "Create Account"
+              )}
             </Button>
           </div>
-          <div className="mt-16 w-full">
-            <h1>Signup with your social network</h1>
-            <div className="w-full flex items-center justify-center flex-col mt-3">
-              <div className="w-full border border-slate-700 flex items-center justify-center gap-3 cursor-pointer py-3 rounded-md font-bold hover:bg-red-400">
-                <FaGoogle />
-                <h1>Continue with Google</h1>
-              </div>
-            </div>
-
-            <div className="w-full flex items-center justify-center flex-col mt-3">
-              <div className="w-full border border-slate-700 flex items-center justify-center gap-3 cursor-pointer py-3 rounded-md font-bold hover:bg-blue-600">
-                <FaFacebook />
-                <h1>Continue with Facebook</h1>
-              </div>
-            </div>
-          </div>
+          <SocialLogin />
         </form>
       </div>
     </div>
