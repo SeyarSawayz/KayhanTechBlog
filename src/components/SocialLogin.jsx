@@ -8,8 +8,8 @@ const SocialLogin = () => {
   const googleAuth = (e) => {
     e.preventDefault();
     authService.googleAuth(
-      "http://localhost:5173",
-      "http://localhost:5173/login"
+      "https://kayhantechblog.netlify.app",
+      "https://kayhantechblog.netlify.app/login"
     );
   };
   return (
