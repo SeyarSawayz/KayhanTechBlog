@@ -39,6 +39,13 @@ const MobileNav = () => {
       active: authStatus,
     },
   ];
+
+  const handleNavigation = (slug) => {
+    setShowNav(true);
+    setTimeout(() => {
+      navigate(slug);
+    }, 300);
+  };
   return (
     <>
       <div
@@ -46,9 +53,9 @@ const MobileNav = () => {
         onClick={() => setShowNav((prev) => !prev)}
       >
         {showNav ? (
-          <IoClose className="text-4xl" />
+          <IoClose className="text-4xl cursor-pointer" />
         ) : (
-          <GiHamburgerMenu className="text-3xl" />
+          <GiHamburgerMenu className="text-3xl cursor-pointer" />
         )}
         {showNav && (
           <div className="p-6 absolute top-20 right-0 mx-4  my-2 min-w-[140px] rounded bg-[#020617] border border-slate-500 shadow-lg sidebar ">
@@ -57,11 +64,8 @@ const MobileNav = () => {
                 item.active ? (
                   <li
                     key={item.name + "MobileNav"}
-                    onClick={() => {
-                      navigate(item.slug);
-                      setShowNav(false);
-                    }}
-                    className="text-zinc-50 hover:text-zinc-100"
+                    onClick={() => handleNavigation(item.slug)}
+                    className="text-zinc-50  cursor-pointer hover:text-zinc-300"
                   >
                     {item.name}
                   </li>
